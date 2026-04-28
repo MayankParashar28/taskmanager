@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    animation: { 'gradient': 'gradient 15s ease infinite', 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <title><%= task.title %></title>
+    <script>
+        // Prevent dark mode flash on load
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-zinc-900 dark:to-indigo-950 min-h-screen text-zinc-800 dark:text-zinc-100 bg-[length:400%_400%] animate-gradient font-sans flex items-center justify-center p-5">
+
+    <div class="w-full max-w-4xl backdrop-blur-xl bg-white/60 dark:bg-zinc-900/60 p-10 md:p-16 rounded-[2.5rem] shadow-[0_20px_60px_rgb(0,0,0,0.05)] border border-white/60 dark:border-zinc-700/50 relative overflow-hidden">
+        
+        <!-- Status Glow Background -->
+        <div class="absolute inset-0 bg-gradient-to-br <%= task.status === 'completed' ? 'from-green-500/10' : 'from-indigo-500/10' %> to-transparent pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+            <div class="flex items-center gap-4 flex-wrap">
+                <% if (task.status === 'completed') { %>
+                    <span class="bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800/50 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Completed</span>
+                <% } else { %>
+                    <span class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Pending</span>
+                <% } %>
+                
+                <% 
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (task.dueDate && task.status !== 'completed') {
+                    const dueDate = new Date(task.dueDate);
+                    const dueOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+                    
+                    if (dueOnly < today) { %>
+                        <span class="bg-rose-100/80 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm animate-pulse-slow">Overdue</span>
+                    <% } else if (dueOnly.getTime() === today.getTime()) { %>
+                        <span class="bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Due Today</span>
+                    <% } else { %>
+                        <span class="bg-blue-50/80 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800/50 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Due: <%= dueOnly.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+                    <% } 
+                } else if (task.dueDate && task.status === 'completed') { 
+                    const dueDate = new Date(task.dueDate);
+                %>
+                    <span class="bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Was Due: <%= dueDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+                <% } %>
+                
+                <span class="text-sm font-semibold tracking-wide text-zinc-500 dark:text-zinc-400 ml-2">Created: <%= new Date(task.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+            </div>
+            
+            <a href="/" class="backdrop-blur-md bg-white/50 dark:bg-zinc-800/50 border border-zinc-200/50 dark:border-zinc-700/50 px-6 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md hover:bg-white/80 dark:hover:bg-zinc-700/80 transition-all duration-300 text-sm flex-shrink-0">← Back</a>
+        </div>
+        
+        <h1 class="relative z-10 text-5xl md:text-6xl font-bold mb-8 tracking-tight <%= task.status === 'completed' ? 'line-through opacity-50 bg-clip-text text-transparent bg-gradient-to-r from-zinc-500 to-zinc-400' : 'bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400' %>"><%= task.title %></h1>
+        
+        <div class="relative z-10 bg-white/40 dark:bg-black/20 p-8 rounded-3xl border border-white/50 dark:border-zinc-700/30 shadow-inner mb-12">
+            <p class="text-lg md:text-xl text-zinc-700 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap font-medium"><%= task.details || 'No details provided.' %></p>
+        </div>
+        
+        <div class="relative z-10 flex flex-wrap gap-4 items-center pt-8 border-t border-zinc-200/50 dark:border-zinc-700/50">
+            <form action="/files/<%= task.id %>/toggle" method="POST" class="inline m-0">
+                <% if (task.status === 'completed') { %>
+                    <button type="submit" class="bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-zinc-800 dark:text-white px-8 py-4 rounded-2xl font-bold shadow-sm transition-all hover:-translate-y-1">Mark as Pending</button>
+                <% } else { %>
+                    <button type="submit" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-green-500/30 transition-all hover:-translate-y-1 hover:shadow-green-500/50">Mark as Completed</button>
+                <% } %>
+            </form>
+            <a href="/files/<%= task.id %>/edit" class="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-1 hover:shadow-orange-500/50 inline-block">Edit Task</a>
+        </div>
+    </div>
+</body>
+</html>

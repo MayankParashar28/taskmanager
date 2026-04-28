@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    animation: { 'gradient': 'gradient 15s ease infinite', 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <title>Delete Task</title>
+    <script>
+        // Prevent dark mode flash on load
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-zinc-900 dark:to-indigo-950 min-h-screen text-zinc-800 dark:text-zinc-100 bg-[length:400%_400%] animate-gradient font-sans flex items-center justify-center p-5">
+
+    <div class="w-full max-w-lg backdrop-blur-xl bg-white/60 dark:bg-zinc-900/60 p-10 md:p-14 rounded-[2.5rem] shadow-[0_20px_60px_rgb(0,0,0,0.05)] border border-white/60 dark:border-zinc-700/50 relative overflow-hidden text-center">
+        
+        <!-- Subtle Danger Glow Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-transparent pointer-events-none"></div>
+
+        <div class="relative z-10 w-24 h-24 bg-rose-100 dark:bg-rose-900/40 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner border border-rose-200 dark:border-rose-800/50">
+            <div class="absolute inset-0 rounded-full bg-rose-400/20 animate-pulse-slow"></div>
+            <svg class="w-12 h-12 text-rose-600 dark:text-rose-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        </div>
+        
+        <h1 class="relative z-10 text-4xl font-bold mb-4 tracking-tight text-zinc-800 dark:text-white">Delete Task?</h1>
+        
+        <p class="relative z-10 text-lg text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed font-medium">
+            Are you sure you want to permanently delete <br><strong class="text-rose-500 dark:text-rose-400 text-xl tracking-tight bg-rose-50 dark:bg-rose-900/30 px-3 py-1 rounded-lg mt-2 inline-block">"<%= task.title %>"</strong><br>This action cannot be undone.
+        </p>
+        
+        <form action="/files/<%= task.id %>/delete" method="POST" class="relative z-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="backdrop-blur-md bg-white/50 dark:bg-zinc-800/50 hover:bg-white/80 dark:hover:bg-zinc-700/80 text-zinc-800 dark:text-white px-8 py-4 rounded-2xl font-bold shadow-sm transition-all text-center flex-1 border border-zinc-200/50 dark:border-zinc-700/50">Keep it</a>
+            <button type="submit" class="bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 transition-all hover:-translate-y-1 cursor-pointer flex-1">Delete forever</button>
+        </form>
+    </div>
+</body>
+</html>

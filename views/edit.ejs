@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    animation: { 'gradient': 'gradient 15s ease infinite' },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <title>Edit Task</title>
+    <script>
+        // Prevent dark mode flash on load
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-zinc-900 dark:to-indigo-950 min-h-screen text-zinc-800 dark:text-zinc-100 bg-[length:400%_400%] animate-gradient font-sans flex items-center justify-center p-5">
+
+    <div class="w-full max-w-3xl backdrop-blur-xl bg-white/60 dark:bg-zinc-900/60 p-10 md:p-14 rounded-[2.5rem] shadow-[0_20px_60px_rgb(0,0,0,0.05)] border border-white/60 dark:border-zinc-700/50 relative overflow-hidden">
+        
+        <!-- Subtle Glow Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent pointer-events-none"></div>
+
+        <div class="relative z-10 flex justify-between items-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-500 tracking-tight">Edit Task</h1>
+            <a href="/" class="backdrop-blur-md bg-white/50 dark:bg-zinc-800/50 border border-zinc-200/50 dark:border-zinc-700/50 px-6 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md hover:bg-white/80 dark:hover:bg-zinc-700/80 transition-all duration-300 text-sm">Cancel</a>
+        </div>
+        
+        <form action="/files/<%= task.id %>/edit" method="post" class="relative z-10 space-y-8">
+            <div class="space-y-3">
+                <label class="block text-sm font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest pl-2">Task Title</label>
+                <input class="w-full h-16 rounded-2xl px-6 outline-none bg-white/90 dark:bg-black/30 focus:bg-white dark:focus:bg-black/50 shadow-inner border border-zinc-200 dark:border-transparent focus:border-amber-500 dark:focus:border-amber-500/50 transition-all duration-300 text-xl font-bold text-zinc-800 dark:text-white placeholder-zinc-400"
+                    placeholder="Task Title" name="newTitle" value="<%= task.title %>" required>
+            </div>
+
+            <div class="space-y-3">
+                <label class="block text-sm font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest pl-2">Due Date</label>
+                <input type="date" class="w-full md:w-1/2 h-16 rounded-2xl px-6 outline-none bg-white/90 dark:bg-black/30 focus:bg-white dark:focus:bg-black/50 shadow-inner border border-zinc-200 dark:border-transparent focus:border-amber-500 dark:focus:border-amber-500/50 transition-all duration-300 text-lg font-medium text-zinc-800 dark:text-white placeholder-zinc-400 color-scheme-light dark:[color-scheme:dark]"
+                    name="newDueDate" value="<%= task.dueDate || '' %>">
+            </div>
+            
+            <div class="space-y-3">
+                <label class="block text-sm font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest pl-2">Task Details</label>
+                <textarea class="w-full h-48 resize-none rounded-2xl p-6 outline-none bg-white/90 dark:bg-black/30 focus:bg-white dark:focus:bg-black/50 shadow-inner border border-zinc-200 dark:border-transparent focus:border-amber-500 dark:focus:border-amber-500/50 transition-all duration-300 text-lg font-medium text-zinc-700 dark:text-zinc-300 placeholder-zinc-400"
+                    placeholder="Task details..."><%= task.details %></textarea>
+            </div>
+            
+            <div class="pt-4">
+                <button type="submit" class="w-full h-16 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white rounded-2xl font-bold text-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all hover:-translate-y-1">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
