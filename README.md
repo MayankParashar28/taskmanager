@@ -1,4 +1,4 @@
-# Task Manager API & Dashboard
+# Task Manager 
 
 A production-ready, full-stack Task Management application built with Node.js, Express, and EJS. This application serves as a robust system for tracking tasks, featuring a highly polished, responsive, and professional dashboard interface with comprehensive dark mode support.
 
@@ -28,7 +28,7 @@ Ensure you have Node.js (version 14.x or higher) installed on your system.
 
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/MayankParashar28/task-manager-api-takehome.git
+   git clone https://github.com/MayankParashar28/taskmanager.git
    cd task-manager-api-takehome
    ```
 
